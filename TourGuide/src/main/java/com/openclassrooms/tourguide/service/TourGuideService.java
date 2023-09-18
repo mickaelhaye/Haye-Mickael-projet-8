@@ -7,14 +7,7 @@ import com.openclassrooms.tourguide.user.UserReward;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -98,7 +91,8 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
-	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
+	//ancienne méthode
+	/*public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
 		for (Attraction attraction : gpsUtil.getAttractions()) {
 			if (rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
@@ -107,7 +101,42 @@ public class TourGuideService {
 		}
 
 		return nearbyAttractions;
+	}*/
+
+	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
+		List<Attraction> nearbyAttractions = new ArrayList<>();
+
+		// récupération des attractions classées du plus proche au plus loin dans un
+		// TreeMap
+		Map<Double, Attraction> map = new TreeMap<Double, Attraction>();
+		for (Attraction attraction : gpsUtil.getAttractions()) {
+			map.put(getDistanceWithinAttractionProximity(attraction, visitedLocation),
+					attraction);
+		}
+
+		// recupération des 5 plus proches
+		int iCpt = 0;
+		for (Map.Entry<Double, Attraction> entry : map.entrySet()) {
+			nearbyAttractions.add(entry.getValue());
+
+			iCpt++;
+			if (iCpt >= 5) {
+				break;
+			}
+		}
+
+
+		return nearbyAttractions;
 	}
+
+	public double getDistanceWithinAttractionProximity (Attraction attraction, VisitedLocation visitedLocation){
+		return rewardsService.getDistanceWithinAttractionProximity(attraction, visitedLocation.location);
+	}
+
+	public int getRewardPoints(Attraction attraction, User user){
+		return rewardsService.getRewardPoints(attraction,user);
+	}
+
 
 	private void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
