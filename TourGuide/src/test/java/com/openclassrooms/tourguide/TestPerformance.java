@@ -45,14 +45,14 @@ public class TestPerformance {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	@Disabled
+	//@Disabled
 	@Test
 	public void highVolumeTrackLocation() {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
-		InternalTestHelper.setInternalUserNumber(100);
+		InternalTestHelper.setInternalUserNumber(100000);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		List<User> allUsers = new ArrayList<>();
@@ -61,8 +61,15 @@ public class TestPerformance {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		for (User user : allUsers) {
-			tourGuideService.trackUserLocation(user);
+			tourGuideService.trackUserLocationWithoutReturn(user);
 		}
+
+		//arret de executor service
+		tourGuideService.shutDowExecutorService();
+		while (!tourGuideService.getExecutorService().isTerminated()){
+			//threads toujours en cour
+		}
+
 		stopWatch.stop();
 		tourGuideService.tracker.stopTracking();
 
