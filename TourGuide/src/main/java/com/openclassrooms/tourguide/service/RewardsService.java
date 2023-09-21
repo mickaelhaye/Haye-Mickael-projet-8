@@ -56,12 +56,6 @@ public class RewardsService {
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
 
-	// méthode rajouter pour retourner la distance entre position actuelle et une
-	// attraction
-	public double getDistanceWithinAttractionProximity(Attraction attraction, Location location) {
-		return getDistance(attraction, location);
-	}
-	
 	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}

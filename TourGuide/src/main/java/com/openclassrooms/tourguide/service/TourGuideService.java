@@ -169,7 +169,7 @@ public class TourGuideService {
 	}
 
 	public double getDistanceWithinAttractionProximity (Attraction attraction, VisitedLocation visitedLocation){
-		return rewardsService.getDistanceWithinAttractionProximity(attraction, visitedLocation.location);
+		return rewardsService.getDistance(attraction, visitedLocation.location);
 	}
 
 	public int getRewardPoints(Attraction attraction, User user){
