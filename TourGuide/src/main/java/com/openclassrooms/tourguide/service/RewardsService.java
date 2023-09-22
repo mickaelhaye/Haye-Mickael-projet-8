@@ -49,22 +49,18 @@ public class RewardsService {
 	}
 	
 	public void calculateRewards(User user) {
-		logger.info("adding user = " + user.getUserName());
-		logger.info("thread = " + Thread.currentThread().getName());
+		//logger.info("adding user = " + user.getUserName());
+		//logger.info("thread = " + Thread.currentThread().getName());
 		List<VisitedLocation> userLocations = new ArrayList<>(user.getVisitedLocations());
 		List<Attraction> attractionNotDo = new ArrayList<>(attractions);
 		List<Attraction> attractionAlreadyDo = new ArrayList<>(user.getUserRewards().stream().map(userReward -> userReward.attraction).collect(Collectors.toList()));
 
 		for(VisitedLocation visitedLocation : userLocations) {
-			//System.out.println(Thread.currentThread().getName()+" userName="+user.getUserName()+" Reawards="+user.getUserRewards().size() +" étape1");
 			attractionNotDo.removeAll(attractionAlreadyDo);
 			attractionAlreadyDo.clear();
 			for(Attraction attraction : attractionNotDo) {
-				//System.out.println(Thread.currentThread().getName()+" userName="+user.getUserName()+" Reawards="+user.getUserRewards().size() +" étape2" );
 				if(nearAttraction(visitedLocation, attraction)) {
-					//System.out.println(Thread.currentThread().getName()+" userName="+user.getUserName()+" Reawards="+user.getUserRewards().size() +" rajout add0");
 					adduserRewards(visitedLocation, attraction,user);
-					//System.out.println(Thread.currentThread().getName()+" userName="+user.getUserName()+" Reawards="+user.getUserRewards().size() +" rajout add1");
 					attractionAlreadyDo.add(attraction);
 				}
 			}
