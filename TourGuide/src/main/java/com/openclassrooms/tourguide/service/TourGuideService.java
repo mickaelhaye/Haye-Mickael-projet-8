@@ -33,7 +33,7 @@ public class TourGuideService {
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
 	boolean testMode = true;
-	private final ExecutorService executorService = Executors.newFixedThreadPool(16);
+	private final ExecutorService executorService = Executors.newFixedThreadPool(1000);
 
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
@@ -51,6 +51,10 @@ public class TourGuideService {
 		}
 		tracker = new Tracker(this);
 		addShutDownHook();
+	}
+
+	public RewardsService getRewardsService() {
+		return rewardsService;
 	}
 
 	public List<UserReward> getUserRewards(User user) {
