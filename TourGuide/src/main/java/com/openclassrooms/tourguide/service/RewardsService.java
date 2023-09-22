@@ -2,8 +2,13 @@ package com.openclassrooms.tourguide.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
@@ -18,6 +23,7 @@ import com.openclassrooms.tourguide.user.UserReward;
 public class RewardsService {
     private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
+	private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
 	// proximity in miles
     private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
@@ -25,6 +31,8 @@ public class RewardsService {
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
 	private final List<Attraction> attractions;
+
+	private final ExecutorService executorService = Executors.newFixedThreadPool(8);
 	
 	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
 		this.gpsUtil = gpsUtil;
@@ -41,6 +49,8 @@ public class RewardsService {
 	}
 	
 	public void calculateRewards(User user) {
+		logger.info("adding user = " + user.getUserName());
+		logger.info("thread = " + Thread.currentThread().getName());
 		List<VisitedLocation> userLocations = new ArrayList<>(user.getVisitedLocations());
 		List<Attraction> attractionNotDo = new ArrayList<>(attractions);
 		List<Attraction> attractionAlreadyDo = new ArrayList<>(user.getUserRewards().stream().map(userReward -> userReward.attraction).collect(Collectors.toList()));
@@ -53,12 +63,25 @@ public class RewardsService {
 				//System.out.println(Thread.currentThread().getName()+" userName="+user.getUserName()+" Reawards="+user.getUserRewards().size() +" étape2" );
 				if(nearAttraction(visitedLocation, attraction)) {
 					//System.out.println(Thread.currentThread().getName()+" userName="+user.getUserName()+" Reawards="+user.getUserRewards().size() +" rajout add0");
-					user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+					adduserRewards(visitedLocation, attraction,user);
 					//System.out.println(Thread.currentThread().getName()+" userName="+user.getUserName()+" Reawards="+user.getUserRewards().size() +" rajout add1");
 					attractionAlreadyDo.add(attraction);
 				}
 			}
 		}
+	}
+
+	public ExecutorService getExecutorService() {
+		return executorService;
+	}
+
+	public void shutDowExecutorService() {
+		executorService.shutdown();
+	}
+
+	public void adduserRewards(VisitedLocation visitedLocation, Attraction attraction, User user){
+		CompletableFuture<Void> future = CompletableFuture.supplyAsync(()-> {int rewards = getRewardPoints(attraction, user); return rewards; },executorService)
+				.thenAccept(rewards->{user.addUserReward(new UserReward(visitedLocation, attraction, rewards));} );
 	}
 	
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
