@@ -2,7 +2,7 @@ name: CI TEST
 
 on:
   push:
-    branches: [ "test" ]
+    branches: [ "dev" ]
  
 jobs:
   build:
