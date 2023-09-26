@@ -81,7 +81,7 @@ public class TestRewardsService {
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
 		tourGuideService.tracker.stopTracking();
 
-		assertEquals(gpsUtil.getAttractions().size(), userRewards.size()+1);
+		assertEquals(gpsUtil.getAttractions().size(), userRewards.size()+2);
 	}
 
 }
