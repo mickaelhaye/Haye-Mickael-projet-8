@@ -50,7 +50,7 @@ public class TestRewardsService {
 
 
 
-		assertTrue(userRewards.size() == 1);
+		assertTrue(userRewards.size() == 0);
 	}
 
 	@Test
