@@ -46,6 +46,6 @@ jobs:
       run: ls -a
     - name: What is the target folder?
       run: |
-       cd target
+       cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/target
        ls -a
  
