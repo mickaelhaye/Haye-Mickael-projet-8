@@ -40,9 +40,7 @@ jobs:
         cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
         mvn clean
     - name: Compilation
-      run: |
-        cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
-        mvn compile
+      run: mvn compile
     - name: Test
       run: |
         cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
