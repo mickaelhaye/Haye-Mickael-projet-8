@@ -35,6 +35,8 @@ jobs:
     - name: Build tripPricer with Maven
       run: mvn install:install-file -Dfile=/home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/libs/TripPricer.jar -DgroupId=tripPricer -DartifactId=tripPricer -Dversion=1.0.0 -Dpackaging=jar
 
+    - name: chemin
+      run: ls -a
     - name: clean
       run: mvn clean
     - name: test
