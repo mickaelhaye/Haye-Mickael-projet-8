@@ -163,6 +163,10 @@ public class TourGuideService {
 		});
 	}
 
+	public RewardsService getRewardsService() {
+		return rewardsService;
+	}
+
 	/**********************************************************************************
 	 * 
 	 * Methods Below: For Internal Testing
