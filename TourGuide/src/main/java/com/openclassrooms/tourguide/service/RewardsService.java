@@ -49,8 +49,6 @@ public class RewardsService {
 	}
 	
 	public void calculateRewards(User user) {
-		//logger.info("adding user = " + user.getUserName());
-		//logger.info("thread = " + Thread.currentThread().getName());
 		List<VisitedLocation> userLocations = new ArrayList<>(user.getVisitedLocations());
 		List<Attraction> attractionNotDo = new ArrayList<>(attractions);
 		List<Attraction> attractionAlreadyDo = new ArrayList<>(user.getUserRewards().stream().map(userReward -> userReward.attraction).collect(Collectors.toList()));
@@ -85,7 +83,6 @@ public class RewardsService {
 	}
 
 	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
-		//System.out.println(Thread.currentThread().getName()+ " calculdistance="+proximityBuffer);
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}
 	

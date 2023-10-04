@@ -6,13 +6,13 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Pipeline Integration continu
 
 on:
   push:
     branches: [ "dev" ]
   pull_request:
-    branches: [ "dev" ]
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -28,15 +28,13 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-
-
     - name: Build gpsUtil with Maven
       run: mvn install:install-file -Dfile=/home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/libs/gpsUtil.jar -DgroupId=gpsUtil -DartifactId=gpsUtil -Dversion=1.0.0 -Dpackaging=jar
     - name: Build reward central with Maven
       run: mvn install:install-file -Dfile=/home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/libs/RewardCentral.jar -DgroupId=rewardCentral -DartifactId=rewardCentral -Dversion=1.0.0 -Dpackaging=jar
     - name: Build tripPricer with Maven
       run: mvn install:install-file -Dfile=/home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/libs/TripPricer.jar -DgroupId=tripPricer -DartifactId=tripPricer -Dversion=1.0.0 -Dpackaging=jar
-    - name: Nettoyage
+    - name: Clean
       run: |
         cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
         mvn clean
