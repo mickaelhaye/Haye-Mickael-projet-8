@@ -11,8 +11,6 @@ name: Pipeline Integration continu
 on:
   push:
     branches: [ "dev" ]
-  pull_request:
-    branches: [ "master" ]
 
 jobs:
   build:
