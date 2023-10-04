@@ -10,7 +10,7 @@ name: Pipeline Integration continu
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "dev2" ]
 
 jobs:
   build:
