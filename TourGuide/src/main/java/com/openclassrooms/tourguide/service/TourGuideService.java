@@ -7,14 +7,8 @@ import com.openclassrooms.tourguide.user.UserReward;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -27,6 +21,7 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 
+import rewardCentral.RewardCentral;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
@@ -38,10 +33,13 @@ public class TourGuideService {
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
 	boolean testMode = true;
+	private final ExecutorService executorService = Executors.newFixedThreadPool(500);
+
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
 		this.gpsUtil = gpsUtil;
-		this.rewardsService = rewardsService;
+
+		this.rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		
 		Locale.setDefault(Locale.US);
 
@@ -55,13 +53,17 @@ public class TourGuideService {
 		addShutDownHook();
 	}
 
+	public RewardsService getRewardsService() {
+		return rewardsService;
+	}
+
 	public List<UserReward> getUserRewards(User user) {
 		return user.getUserRewards();
 	}
 
 	public VisitedLocation getUserLocation(User user) {
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
-				: trackUserLocation(user);
+				: trackUserLocationWithReturn(user);
 		return visitedLocation;
 	}
 
@@ -88,23 +90,72 @@ public class TourGuideService {
 		return providers;
 	}
 
-	public VisitedLocation trackUserLocation(User user) {
-		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-		user.addToVisitedLocations(visitedLocation);
-		rewardsService.calculateRewards(user);
-		return visitedLocation;
+	public ExecutorService getExecutorService() {
+		return executorService;
 	}
 
+	public void shutDowExecutorService() {
+		executorService.shutdown();
+	}
+
+	public VisitedLocation trackUserLocationWithReturn(User user){
+		return trackUserLocationOtherThread(user, true);
+	}
+
+	public void trackUserLocationWithoutReturn(User user){
+		trackUserLocationOtherThread(user, false);
+	}
+	public VisitedLocation trackUserLocationOtherThread(User user, Boolean returnVisitedLocation) {
+		CompletableFuture<VisitedLocation> trackUser = CompletableFuture.supplyAsync(() -> {
+					VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+					return visitedLocation;
+				}, executorService)
+				.thenApply(visitedLocation -> {
+					user.addToVisitedLocations(visitedLocation);
+					return visitedLocation;
+				})
+				.thenApply(visitedLocation -> {
+					rewardsService.calculateRewards(user);
+					//logger.info("adding user = " + user.getUserName());
+					return visitedLocation;
+				});
+		if(returnVisitedLocation) {
+			return trackUser.join();
+		}
+		return null;
+	}
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
+
+		// récupération des attractions classées du plus proche au plus loin dans un
+		// TreeMap
+		Map<Double, Attraction> map = new TreeMap<Double, Attraction>();
 		for (Attraction attraction : gpsUtil.getAttractions()) {
-			if (rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
-				nearbyAttractions.add(attraction);
-			}
+			map.put(getDistanceWithinAttractionProximity(attraction, visitedLocation),
+					attraction);
 		}
 
+		// recupération des 5 plus proches
+		int iCpt = 0;
+		for (Map.Entry<Double, Attraction> entry : map.entrySet()) {
+			nearbyAttractions.add(entry.getValue());
+
+			iCpt++;
+			if (iCpt >= 5) {
+				break;
+			}
+		}
 		return nearbyAttractions;
 	}
+
+	public double getDistanceWithinAttractionProximity (Attraction attraction, VisitedLocation visitedLocation){
+		return rewardsService.getDistance(attraction, visitedLocation.location);
+	}
+
+	public int getRewardPoints(Attraction attraction, User user){
+		return rewardsService.getRewardPoints(attraction,user);
+	}
+
 
 	private void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
