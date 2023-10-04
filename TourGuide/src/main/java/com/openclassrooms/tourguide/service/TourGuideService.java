@@ -8,6 +8,9 @@ import com.openclassrooms.tourguide.user.UserReward;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -32,10 +35,11 @@ public class TourGuideService {
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
 	boolean testMode = true;
+	private final ExecutorService executorService = Executors.newFixedThreadPool(500);
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
 		this.gpsUtil = gpsUtil;
-		this.rewardsService = rewardsService;
+		this.rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		
 		Locale.setDefault(Locale.US);
 
@@ -55,7 +59,7 @@ public class TourGuideService {
 
 	public VisitedLocation getUserLocation(User user) {
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
-				: trackUserLocation(user);
+				: trackUserLocationWithReturn(user);
 		return visitedLocation;
 	}
 
@@ -82,12 +86,39 @@ public class TourGuideService {
 		return providers;
 	}
 
-	public VisitedLocation trackUserLocation(User user) {
-		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-		user.addToVisitedLocations(visitedLocation);
-		RewardsService rewardsService1 = new RewardsService(gpsUtil, new RewardCentral());
-		rewardsService1.calculateRewards(user);
-		return visitedLocation;
+	public ExecutorService getExecutorService() {
+		return executorService;
+	}
+
+	public void shutDowExecutorService() {
+		executorService.shutdown();
+	}
+
+	public VisitedLocation trackUserLocationWithReturn(User user){
+		return trackUserLocationOtherThread(user, true);
+	}
+
+	public void trackUserLocationWithoutReturn(User user){
+		trackUserLocationOtherThread(user, false);
+	}
+	public VisitedLocation trackUserLocationOtherThread(User user, Boolean returnVisitedLocation) {
+		CompletableFuture<VisitedLocation> trackUser = CompletableFuture.supplyAsync(() -> {
+					VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+					return visitedLocation;
+				}, executorService)
+				.thenApply(visitedLocation -> {
+					user.addToVisitedLocations(visitedLocation);
+					return visitedLocation;
+				})
+				.thenApply(visitedLocation -> {
+					rewardsService.calculateRewards(user);
+					//logger.info("adding user = " + user.getUserName());
+					return visitedLocation;
+				});
+		if(returnVisitedLocation) {
+			return trackUser.join();
+		}
+		return null;
 	}
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
