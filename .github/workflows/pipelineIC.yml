@@ -56,10 +56,10 @@ jobs:
         run: |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/target
           ls -a
-        #- name: Prepare Release
+      - name: Prepare Release
           #run: > # syntaxe multilingue YAML : il s'agit bien d'une seule commande avec des arguments
           #mvn -B release:prepare release:perform --file /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/pom.xml
-        #-Dpassword=${{ secrets.GITHUB_TOKEN }} -Darguments="-s $GITHUB_WORKSPACE/settings.xml"
+          -Dpassword=${{ secrets.GITHUB_TOKEN }} -Darguments="-s $GITHUB_WORKSPACE/settings.xml"
       # Création d'une Release Github
       - name: Publish Github Release
         uses: softprops/action-gh-release@v1
