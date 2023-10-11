@@ -58,12 +58,12 @@ jobs:
           ls -a
       - name: 'Get Previous tag'
         id: previous_tag
-        uses: "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"
+        uses: "githubActionprojet8"
         with:
           fallback: 1.0.0
       # Création d'une Release Github
       - name: Publish Github Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.previous_tag.outputs.Ttag }} # On récupère le tag extrait au step précédent.
+          tag_name: ${{ steps.previous_tag.outputs.tag }} # On récupère le tag extrait au step précédent.
           files: target/*.jar # Attachement du jar produit à la release Github
