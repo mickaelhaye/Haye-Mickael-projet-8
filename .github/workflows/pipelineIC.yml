@@ -61,11 +61,11 @@ jobs:
         run:  |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
           mvn --batch-mode --update-snapshots verify 
-          mkdir /staging && cp target/*.jar /staging
+
       - uses: actions/upload-artifact@v3
         with:
           name: Package
-          path: /staging
+          path: /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/*.jar
 
 
 
