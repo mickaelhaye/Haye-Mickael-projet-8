@@ -60,7 +60,7 @@ jobs:
 
       - name: test
         run:  |
-          mvn --batch-mode --update-snapshots verify
+          mvn --batch-mode --update-snapshots verify /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/pom.xml
           mkdir staging && cp target/*.jar staging
       - uses: actions/upload-artifact@v3
         with:
