@@ -25,6 +25,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          server-id: github
           cache: maven
       - name: Build gpsUtil with Maven
         run: mvn install:install-file -Dfile=/home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/libs/gpsUtil.jar -DgroupId=gpsUtil -DartifactId=gpsUtil -Dversion=1.0.0 -Dpackaging=jar
@@ -36,11 +37,29 @@ jobs:
         run: |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
           mvn clean
-      - name: Build with Maven
-        run: mvn -B package --file /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/pom.xml
-      - name: List the current directory
-        run: ls -a
-      - name: What is the target folder?
+      - name: compilation
         run: |
-          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/target
-          ls -a
+          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
+          mvn compile
+      - name: test
+        run: |
+          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
+          mvn test
+      - name: install
+        run: |
+          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
+          mvn install --file /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/pom.xml
+      - name: update artifact
+        run:  |
+          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
+          mvn --batch-mode --update-snapshots verify
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Package
+          path: /home/runner/.m2/repository/com/openclassrooms/tourguide/0.0.1-SNAPSHOT/
+
+
+
+
+
+     
