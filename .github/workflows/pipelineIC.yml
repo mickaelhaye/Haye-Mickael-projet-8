@@ -26,9 +26,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           server-id: github
-          settings-path: ${{ github.workspace }} # Cette variable correspond au path de la racine du projet sur le runne
           cache: maven
-      - name: Build gpsUtill with Maven
+      - name: Build gpsUtil with Maven
         run: mvn install:install-file -Dfile=/home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/libs/gpsUtil.jar -DgroupId=gpsUtil -DartifactId=gpsUtil -Dversion=1.0.0 -Dpackaging=jar
       - name: Build reward central with Maven
         run: mvn install:install-file -Dfile=/home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/libs/RewardCentral.jar -DgroupId=rewardCentral -DartifactId=rewardCentral -Dversion=1.0.0 -Dpackaging=jar
@@ -40,8 +39,7 @@ jobs:
           mvn clean
       - name: compilation
         run: |
-          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
-          mvn compile
+         mvn compile
       - name: test
         run: |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
@@ -50,12 +48,7 @@ jobs:
         run: |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
           mvn install --file /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/pom.xml
-      - name: List the current directory
-        run: ls -a
-      - name: What is the target folder?
-        run: |
-          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/target
-          ls -a
+     
           
 
       - name: test
@@ -66,5 +59,13 @@ jobs:
         with:
           name: Package
           path: staging
+
+
+      - name: List the current directory
+        run: ls -a
+      - name: What is the target folder?
+        run: |
+          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/target
+          ls -a
 
      
