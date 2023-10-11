@@ -64,5 +64,5 @@ jobs:
       - name: Publish Github Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.tag-name.outputs.TAG }} # On récupère le tag extrait au step précédent.
+          # tag_name: ${{ steps.tag-name.outputs.TAG }} # On récupère le tag extrait au step précédent.
           files: target/*.jar # Attachement du jar produit à la release Github
