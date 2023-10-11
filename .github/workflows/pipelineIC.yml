@@ -39,7 +39,8 @@ jobs:
           mvn clean
       - name: compilation
         run: |
-         mvn compile
+          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
+          mvn compile
       - name: test
         run: |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
@@ -53,7 +54,8 @@ jobs:
 
       - name: test
         run:  |
-          mvn --batch-mode --update-snapshots verify /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
+          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
+          mvn --batch-mode --update-snapshots verify 
           mkdir staging && cp target/*.jar staging
       - uses: actions/upload-artifact@v3
         with:
