@@ -56,9 +56,14 @@ jobs:
         run: |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/target
           ls -a
+      - name: 'Get Previous tag'
+        id: previous_tag
+        uses: "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"
+        with:
+          fallback: 1.0.0
       # Création d'une Release Github
       - name: Publish Github Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.tag-name.outputs.TAG }} # On récupère le tag extrait au step précédent.
+          tag_name: ${{ steps.previous_tag.outputs.Ttag }} # On récupère le tag extrait au step précédent.
           files: target/*.jar # Attachement du jar produit à la release Github
