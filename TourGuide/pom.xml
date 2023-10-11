@@ -85,17 +85,4 @@
 		</plugins>
 	</build>
 
-	<distributionManagement>
-		<repository>
-			<id>github</id>
-			<url>https://maven.pkg.github.com/mickaelhaye/Haye-Mickael-projet-8</url>
-			<layout>default</layout>
-		</repository>
-		<snapshotRepository>
-			<id>github</id>
-			<url>https://maven.pkg.github.com/mickaelhaye/Haye-Mickael-projet-8</url>
-			<layout>default</layout>
-		</snapshotRepository>
-	</distributionManagement>
-
 </project>
