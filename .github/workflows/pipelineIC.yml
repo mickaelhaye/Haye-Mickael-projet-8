@@ -29,7 +29,7 @@ jobs:
           settings-path: ${{ github.workspace }} # Cette variable correspond au path de la racine du projet sur le runne
           cache: maven
       - name: Build gpsUtil with Maven
-        run: mvn install:install-file -Dfile=/home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/libs/gpsUtil.jar -DgroupId=gpsUtil -DartifactId=gpsUtil -Dversion=1.0.0 -Dpackaging=jar
+        run: mvn install:install-file -Dfile=/home/runner/work/Haye-Mickael-projet-8/TourGuide/libs/gpsUtil.jar -DgroupId=gpsUtil -DartifactId=gpsUtil -Dversion=1.0.0 -Dpackaging=jar
       - name: Build reward central with Maven
         run: mvn install:install-file -Dfile=/home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/libs/RewardCentral.jar -DgroupId=rewardCentral -DartifactId=rewardCentral -Dversion=1.0.0 -Dpackaging=jar
       - name: Build tripPricer with Maven
