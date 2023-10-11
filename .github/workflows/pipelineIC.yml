@@ -65,7 +65,8 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Package
-          path: /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/*.jar
+          path: /home/runner/.m2/repository/com/openclassrooms/tourguide/0.0.1-SNAPSHOT/
+
 
 
 
