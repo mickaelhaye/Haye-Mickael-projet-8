@@ -49,8 +49,13 @@ jobs:
         run: |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
           mvn install --file /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/pom.xml
-     
-          
+
+      - name: List the current directory
+        run: ls -a
+      - name: What is the target folder?
+        run: |
+          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/target
+          ls -a
 
       - name: test
         run:  |
@@ -63,11 +68,6 @@ jobs:
           path: staging
 
 
-      - name: List the current directory
-        run: ls -a
-      - name: What is the target folder?
-        run: |
-          cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/target
-          ls -a
+
 
      
