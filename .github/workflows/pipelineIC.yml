@@ -48,11 +48,11 @@ jobs:
       - name: install
         run: |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
-          mvn install --file /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/pom.xml
+          mvn package --file /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/pom.xml
       - name: update artifact
         run:  |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
-          mvn --batch-mode --update-snapshots verify
+          mvn --batch-mode --update-snapshots
       - uses: actions/upload-artifact@v3
         with:
           name: Package
