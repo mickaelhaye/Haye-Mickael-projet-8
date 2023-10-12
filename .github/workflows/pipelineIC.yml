@@ -48,7 +48,7 @@ jobs:
       - name: update artefact
         run:  |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
-          mvn --batch-mode --update-snapshots install
+          mvn --batch-mode --update-snapshots install -DskipTests
       - name: create package
         uses: actions/upload-artifact@v3
         with:
