@@ -10,7 +10,7 @@ name: Pipeline Integration continu
 
 on:
   push:
-    branches: [ "dev3" ]
+    branches: [ "dev2" ]
 
 jobs:
   build:
@@ -49,11 +49,12 @@ jobs:
         run: |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
           mvn install --file /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/pom.xml
-      - name: update artifact
+      - name: update artefact
         run:  |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
           mvn --batch-mode --update-snapshots verify
-      - uses: actions/upload-artifact@v3
+      - name: create package
+        uses: actions/upload-artifact@v3
         with:
           name: Package
           path: /home/runner/.m2/repository/com/openclassrooms/tourguide/0.0.1-SNAPSHOT/
