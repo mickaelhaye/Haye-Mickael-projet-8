@@ -45,11 +45,11 @@ jobs:
         run: |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
           mvn test
-      - name: update artefact
+      - name: Jar Creation
         run:  |
           cd /home/runner/work/Haye-Mickael-projet-8/Haye-Mickael-projet-8/TourGuide/
           mvn --batch-mode --update-snapshots install -DskipTests
-      - name: create package
+      - name: Jar Downloaded with name Package
         uses: actions/upload-artifact@v3
         with:
           name: Package
